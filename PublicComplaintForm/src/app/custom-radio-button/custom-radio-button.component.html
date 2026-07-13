@@ -1,0 +1,9 @@
+<div (click)="Clicked(i)" class="radio-button-container" *ngFor="let option of optionsList; let i = index;">
+
+    <div class="radio-button-outer-circle">
+        <div id="{{i}}-radio" class="radio-button-inner-circle" [ngClass]="{'selected-radio-button' : selectedOption === option}"></div>
+    </div>
+
+    <p class="radio-button-text">{{option}}</p>
+
+</div>

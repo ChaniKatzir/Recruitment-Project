@@ -1,0 +1,180 @@
+<div class="main-container">
+
+    <div class="title-container">
+        <h1 class="main-title">טופס פניות הציבור</h1>
+        <img class="main-logo" src="Check.svg" alt="לוגו טופס פניות הציבור"/>
+    </div>
+
+    <div class="form-instructions-container">
+
+        <div style="position: relative;">
+
+            <p class="instruction-text">אגף הביקורת הפנימית ותלונות הציבור בהנהלת בתי המשפט משיב לפניות ומברר תלונות הקשורות למכלול הפעילות של מערכת בתי המשפט.<br/><br/>
+                לנוחיותך מצורף קישור ל<a href="https://www.gov.il/BlobFolder/policy/general_regulation_7_001_20/he/complainingtreatment.pdf" target="_blank">נוהל טיפול בפניות הציבור</a> המפרט את עקרונות הטיפול בפניות ואת תהליך הטיפול בהן.
+            </p>
+    
+            <p class="instruction-text">
+                ככלל, פניות תענינה תוך 5 ימי עבודה - זאת בכפוף למורכבות הפניה ולאילוצי המערכת.<br/>
+                ככלל, תלונות תענינה תוך 10 ימי עבודה - זאת בכפוף למורכבות התלונה ולאילוצי המערכת.
+            </p>
+
+            <div class="description-icon-container">
+
+                <img src="description-icon.svg"/>
+
+            </div>
+
+        </div>
+
+        <div class="expanded-text-container">
+
+            <p class="expanded-text-title">פניות ותלונות שלא יבדקו על ידי אגף הביקורת ותלונות הציבור:</p>
+            <ol>
+                <li>תלונות על ניהול ההליך המשפטי על ידי השופט / הרשם, לרבות התנהגות או מעשה של שופט / רשם, תלונות בעניין התלוי ועומד בבית משפט או תלונות על החלטות שיפוטיות.</li>
+                <li><div>פניות שעניינן בקשות לבית משפט, לרבות בקשות לפסילת שופט. <a href="https://www.court.gov.il/ngcs.web.site/homepage.aspx" target="_blank">קישור למערכת נט המשפט</a></div></li>
+                <li>תלונות או פניות שעניינן אינו קשור לגורם כלשהו במערכת בתי המשפט, האגף יעבירן לגורם הרלוונטי ויידע את הפונה על כך, או לחילופין יודיע לפונה, ככל שידוע לו, מהי הכתובת הנכונה להגשת פנייתו.</li>
+                <li>תלונות המוגשות בעילום שם – אלא אם החליט מנהל האגף שיש במכתב התלונה נקודות שניתן לבדוק אותן וכן שיש בו נסיבות המצדיקות בירור.</li>
+                <li>תלונות או פניות המופנות לגורם אחר, כשאגף הביקורת מכותב רק בהעתקים.</li>
+                <li>תלונות שהאגף מוצא אותן קנטרניות או טורדניות או תלונות של אותו פונה החוזרות על עצמן שוב ושוב, ותלונות העוסקות בזוטי דברים.</li>
+                <li>תלונה שהוגשה לאחר שעברה שנה מיום המעשה שעליו נסבה התלונה או מהיום שהמעשה נודע למתלונן, לפי המאוחר יותר, אלא אם מצאה המבקר הפנימי שיש סיבה מיוחדת המצדיקה את בירורן.</li>
+                <li>תלונות הנמצאות בחקירת משטרה או גורם חוקר אחר.</li>
+                <li>פניות שהן בגדר בקשה לייעוץ משפטי.</li>
+            </ol>
+
+        </div>
+
+        <div (click)="ToggleInstructions()" class="row-container">
+
+            <p class="expandable-text">{{expandButtonData.text}}</p>
+            <img [src]="expandButtonData.image" alt="תמונת חץ המסמנת את כיוון פתיחת/סגירת התוכן"/>
+
+        </div>
+
+    </div>
+
+    <div class="form-instructions-container-mobile">
+
+        <p class="instruction-text">אגף הביקורת ותלונות הציבור בהנהלת בתי המשפט מברר פניות הקשורות למכלול הפעילות של מערכת בתי המשפט,<br/>למעט תלונות על החלטות שיפוטיות או על נושאי משרה שיפוטית.<br/>
+            לנוחיותך מצורף קישור ל<a href="https://www.gov.il/BlobFolder/policy/general_regulation_7_001_20/he/%D7%A0%D7%95%D7%94%D7%9C%20%D7%98%D7%99%D7%A4%D7%95%D7%9C%20%D7%91%D7%AA%D7%9C%D7%95%D7%A0%D7%95%D7%AA%20%D7%95%D7%91%D7%A4%D7%A0%D7%99%D7%95%D7%AA%20%D7%94%D7%A6%D7%99%D7%91%D7%95%D7%A8.pdf" target="_blank">נוהל טיפול בפניות הציבור</a> המפרט את עקרונות הטיפול בפניות ואת תהליך הטיפול בהן.
+        </p>
+
+        <div class="expanded-text-container">
+
+            <p class="instruction-text">
+                ככלל, פניות תענינה תוך 5 ימי עבודה - זאת בכפוף למורכבות הפניה ולאילוצי המערכת.<br/>
+                ככלל, תלונות תענינה תוך 10 ימי עבודה - זאת בכפוף למורכבות התלונה ולאילוצי המערכת.
+            </p>
+
+            <p class="expanded-text-title">פניות ותלונות שלא יבדקו על ידי אגף הביקורת ותלונות הציבור:</p>
+            <ol>
+                <li>תלונות על ניהול ההליך המשפטי על ידי השופט / הרשם, לרבות התנהגות או מעשה של שופט / רשם, תלונות בעניין התלוי ועומד בבית משפט או תלונות על החלטות שיפוטיות.</li>
+                <li><div>פניות שעניינן בקשות לבית משפט, לרבות בקשות לפסילת שופט. <a href="https://www.court.gov.il/ngcs.web.site/homepage.aspx" target="_blank">קישור למערכת נט המשפט</a></div></li>
+                <li>תלונות או פניות שעניינן אינו קשור לגורם כלשהו במערכת בתי המשפט, האגף יעבירן לגורם הרלוונטי ויידע את הפונה על כך, או לחילופין יודיע לפונה, ככל שידוע לו, מהי הכתובת הנכונה להגשת פנייתו.</li>
+                <li>תלונות המוגשות בעילום שם – אלא אם החליט מנהל האגף שיש במכתב התלונה נקודות שניתן לבדוק אותן וכן שיש בו נסיבות המצדיקות בירור.</li>
+                <li>תלונות או פניות המופנות לגורם אחר, כשאגף הביקורת מכותב רק בהעתקים.</li>
+                <li>תלונות שהאגף מוצא אותן קנטרניות או טורדניות או תלונות של אותו פונה החוזרות על עצמן שוב ושוב, ותלונות העוסקות בזוטי דברים.</li>
+                <li>תלונה שהוגשה לאחר שעברה שנה מיום המעשה שעליו נסבה התלונה או מהיום שהמעשה נודע למתלונן, לפי המאוחר יותר, אלא אם מצאה המבקר הפנימי שיש סיבה מיוחדת המצדיקה את בירורן.</li>
+                <li>תלונות הנמצאות בחקירת משטרה או גורם חוקר אחר.</li>
+                <li>פניות שהן בגדר בקשה לייעוץ משפטי.</li>
+            </ol>
+
+        </div>
+
+        <div (click)="ToggleInstructionsMobile()" class="row-container">
+
+            <p class="expandable-text">{{expandButtonData.text}}</p>
+            <img [src]="expandButtonData.image" alt="תמונת חץ המסמנת את כיוון פתיחת/סגירת התוכן"/>
+
+        </div>
+
+    </div>
+
+    <h2 class="sub-title">סוג הפניה</h2>
+
+    <div class="select-contact-type-container" [formGroup]="form">
+
+        <div class="type-row">
+
+            <div class="type-container">
+
+                <div (click)="ClickedRequest()" class="radio-button-container">
+    
+                    <div class="radio-button-outer-circle">
+                        <div id="request-radio" class="radio-button-inner-circle"></div>
+                    </div>
+        
+                    <p class="radio-button-text">בירור או בקשה</p>
+        
+                </div>
+                <div class="tooltip-container"
+                    (mouseenter)="RequestTooltipVisible = true"
+                    (mouseleave)="RequestTooltipVisible = false">
+
+                    <img src="tooltip-icon.svg" alt="סמל שאלה - לחצו או ריחפו לקבלת הסבר על האפשרויות"/>
+                    <div class="tooltip-text-container" *ngIf="RequestTooltipVisible">
+                        <p class="tooltip-title">בירור או בקשה</p>
+                        <span class="tooltip-text">בקשה, שאלה, הצעה, פנייה לקבלת מידע וכדומה</span>
+                        <img (click)="RequestTooltipVisible = false" class="tooltip-x" src="tooltip-x.svg"/>
+                    </div>
+
+                </div>
+    
+            </div>
+            
+            <div class="type-container">
+    
+                <div (click)="ClickedComplaint()" class="radio-button-container">
+    
+                    <div class="radio-button-outer-circle">
+                        <div id="complaint-radio" class="radio-button-inner-circle"></div>
+                    </div>
+        
+                    <p class="radio-button-text">תלונה</p>
+        
+                </div>
+                <div class="tooltip-container"
+                    (mouseenter)="ComplaintTooltipVisible = true"
+                    (mouseleave)="ComplaintTooltipVisible = false">
+                    <img src="tooltip-icon.svg" alt="סמל שאלה - לחצו או ריחפו לקבלת הסבר על האפשרויות"/>
+                    <div class="tooltip-text-container" *ngIf="ComplaintTooltipVisible">
+                        <p class="tooltip-title">תלונה</p>
+                        <span class="tooltip-text">טענה על מעשה או מחדל, שלדעת המתלונן נעשה בניגוד לחוק, או ללא סמכות, או שיש בו חריגה, או שנעשה בניגוד לנהלים או לכללי מנהל תקין, או שיש בו משום אי צדק בולט.</span>
+                        <img (click)="ComplaintTooltipVisible = false" class="tooltip-x" src="tooltip-x.svg"/>
+                    </div>
+                </div>
+    
+            </div>
+
+        </div>
+
+        <div class="error-message-container" *ngIf="ShowInvalidFormMessage">
+            <img src="validation-mark.svg"/>
+            <small class="error-message">
+                שדה חובה
+            </small>
+        </div>
+
+        <label class="custom-checkbox">
+            <input type="checkbox" name="followUp" (change)="OnFollowUpCheckboxChange()" id="followUpCheckbox"/>
+            <span class="checkmark"></span>
+            פניית המשך?
+        </label>
+
+        <div id="slideBox">
+            <p class="followUpText">מספר פנייה/תלונה קודמת</p>
+            <input placeholder="פ-25/2025 או ת-65/2025" id="followUpInput"/>
+        </div>
+
+        <div class="error-message-container" *ngIf="ShowInvalidFollowUpMessage">
+            <img src="validation-mark.svg"/>
+            <small class="error-message">
+                {{followUpErrorMessage}}
+            </small>
+        </div>
+
+    </div>
+
+    <div class="button-container">
+        <button (click)="MoveToNextStep()">המשך</button>
+    </div>
+</div>

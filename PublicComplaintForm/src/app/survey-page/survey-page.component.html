@@ -1,0 +1,69 @@
+<app-top-bar></app-top-bar>
+
+<div class="main-page-container">
+    <div class="title-logo-container">
+        <h1 class="main-title">סקר שביעות רצון</h1>
+
+        <img class="survey-logo" src="survey-logo.svg"/>
+    </div>
+
+    <div class="questions-container">
+
+        <p class="survey-instructions-text">לגבי כל אחד מההיגדים הבאים נודה לסימון הציון המתאים בעיניך בין 1-5</p>
+
+        <div class="break-line"></div>
+
+        <div class="question-container" *ngFor="let question of surveyQuestions; let i = index">
+
+            <div class="question-content-and-rating" *ngIf="!question.isFreeText">
+
+                <p class="question-text" [innerHTML]="question.question"></p>
+    
+                <div class="multiple-selection-container" *ngIf="question.multipleSelection">
+                    <app-custom-radio-button 
+                        [optionsList]="question.options" 
+                        (selectedOptionEvent)="onRadioButtonClick($event)" 
+                        [selectedOption]="question.options[(+question.answer) - 1]">
+                    </app-custom-radio-button>
+                </div>
+
+                <div class="rating-container"*ngIf="!question.isFreeText && !question.multipleSelection">
+
+                    <div class="star-container" *ngFor="let j of starArray(question.starCount)" 
+                        (mouseenter)="OnMouseEnterRatingStar($event)" 
+                        (mouseleave)="OnMouseLeaveRatingStar($event)" 
+                        (click)="OnMouseClickRatingStar($event)">
+
+                        <img 
+                            *ngIf="!question.isFreeText && !question.multipleSelection"
+                            id="question{{i}}-{{j}}" 
+                            src="/empty_star.svg" 
+                            width="32px"
+                            height="32px"
+                            class="star-image"/>
+
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            <div class="question-content-and-free-text" *ngIf="question.isFreeText">
+
+                <p class="question-text" [innerHTML]="question.question"></p>
+
+                <textarea (input)="OnTextAreaInputChanged($event)" *ngIf="question.isFreeText" id="question{{i}}" class="free-form-answer-textarea"></textarea>
+
+            </div>
+
+            <div class="break-line" *ngIf="i < surveyQuestions.length - 1"></div>
+    
+        </div>
+
+        <p class="error-message" *ngIf="showErrorMessage">{{errorMessage}}</p>
+
+    </div>
+
+    <button (click)="OnSurveySubmitButtonClicked()">שליחה</button>
+
+</div>

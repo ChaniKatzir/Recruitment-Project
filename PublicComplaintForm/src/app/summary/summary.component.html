@@ -1,0 +1,94 @@
+<div *ngIf="isLoading" class="overlay">
+    <div class="spinner"></div>
+</div>
+
+<div class="main-container">
+
+    <div class="title-container">
+        <h1 class="main-title">טופס פניות הציבור</h1>
+        <img class="main-logo" src="Check.svg" alt="לוגו טופס פניות הציבור"/>
+    </div>
+
+    <h2 class="sub-title">סיכום ושליחה</h2>
+
+    <div class="form-container">
+
+        <div class="row-one">
+            <p class="title-text">סוג הפניה</p>
+            <p *ngIf="formData.contactType === 'complaint'" class="field-value">תלונה</p>
+            <p *ngIf="formData.contactType === 'request'" class="field-value">בקשה</p>
+        </div>
+
+        <div class="row-two summary-grid one-column">
+            <p class="title-text">פרטי הפונה</p>
+            <p class="row-two summary-text">{{formData.firstName}} {{formData.lastName}}</p>
+            <p *ngIf="formData.email" class="row-two summary-text">דואר אלקטרוני {{formData.email}}</p>
+            <p *ngIf="formData.idNumber" class="row-three summary-text">תעודת זהות {{formData.idNumber}}</p>
+            <p *ngIf="formData.address" class="row-three summary-text">כתובת {{formData.address}}, {{formData.city}}</p>
+            <p *ngIf="formData.phoneNumber" class="row-four summary-text">טלפון נייד {{formData.phoneNumber}}</p>
+        </div>
+
+        <div class="row-two summary-grid one-column" *ngIf="formData.isComplaintOnBehalfOfSomeone">
+            <p class="title-text">פרטי בא הכוח</p>
+            <p *ngIf="formData.agent_FirstName || formData.agent_LastName" class="row-two summary-text">{{formData.agent_FirstName}} {{formData.agent_LastName}}</p>
+            <p *ngIf="formData.agent_Email" class="row-two summary-text">דואר אלקטרוני {{formData.agent_Email}}</p>
+            <p *ngIf="formData.agent_IdNumber" class="row-three summary-text">תעודת זהות {{formData.agent_IdNumber}}</p>
+            <p *ngIf="formData.agent_PhoneNumber" class="row-four summary-text">טלפון נייד {{formData.agent_PhoneNumber}}</p>
+        </div>
+
+        <div class="row-three two-columns">
+            <p class="title-text">פרטי הפניה</p>
+            <p class="field-value">{{formData.contactDescription}}</p>
+        </div>
+
+        <div class="row-four one-column">
+            <p *ngIf="uploadedFiles.length > 0" class="title-text">מסמכים</p>
+            <p *ngFor="let file of uploadedFiles; index as i" class="field-value">{{file.fileNameTrunc}}</p>
+        </div>
+        
+        <div class="row-six captcha-container">
+
+            <div class="captcha-row">
+                <img width="200" height="50" src="{{captchaSession?.captchaImage}}" alt="תמונת האותיות ומספרים - תמונת captcha"/>
+                <img src="redo.png" (click)="OnCaptchaRefresh()" alt="כפתור להחלפת התמונה עם האותיות והמספרים בתמונה חדשה"/>
+            </div>
+
+            <div style="width: fit-content;">
+                <label for="captcha-input" class="captcha-text">הקלד את הטקסט מהתמונה</label>
+
+                <input id="captcha-input" #captchaInput class="captcha-input"/>
+
+                <p *ngIf="showCaptchaError" class="error-message-text">{{errorMessage}}</p>
+            </div>
+
+        </div>
+        
+
+    </div>
+
+    <div class="button-container">
+        <div class="back-button-container">
+            <img src="back-arrow.svg"/>
+            <button class="prev-button" (click)="GoToPrevStep()">חזרה</button>
+        </div>
+        <button (click)="OnFormSubmit(captchaInput)" class="next-button">המשך</button>
+    </div>
+
+</div>
+
+<div class="popup-overlay-background" *ngIf="formError.showError">
+
+    <div class="error-popup-container">
+
+        <div class="error-popup-inner-container">
+    
+            <p class="popup-title">{{formError.errorTitle}}</p>
+            <p class="popup-message">{{formError.errorMessage}}</p>
+    
+            <button (click)="CloseErrorPopup()" class="popup-button">סגור</button>
+    
+        </div>
+    
+    </div>
+
+</div>

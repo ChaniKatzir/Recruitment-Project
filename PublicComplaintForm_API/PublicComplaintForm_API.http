@@ -1,0 +1,6 @@
+@PublicComplaintForm_API_HostAddress = http://localhost:5209
+
+GET {{PublicComplaintForm_API_HostAddress}}/
+Accept: application/json
+
+###

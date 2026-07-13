@@ -1,0 +1,232 @@
+<div class="main-container">
+
+    <div class="title-container">
+        <h1 class="main-title">טופס פניות הציבור</h1>
+        <img class="main-logo" src="Check.svg" alt="לוגו טופס פניות הציבור"/>
+    </div>
+
+    <h2 class="sub-title">פרטי הפונה</h2>
+
+    <div class="form-container" [formGroup]="form">
+
+        <div class="form-field-container size-limit-for-matselect-container">
+            <h3 class="form-field-name">תואר</h3>
+            <mat-select (selectionChange)="onTitleSelectionChanged($event)" [(value)]="selectedOption">
+                <mat-option *ngFor="let title of titleOptions" [value]="title">{{title}}</mat-option>
+            </mat-select>
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-field-container">
+                <div class="dot-row">
+                    <label for="firstName" class="form-field-name">שם פרטי</label>
+                    <h3 class="required-form-field" *ngIf="false">*</h3>
+                </div>
+                <input id="firstName" formControlName="firstName" value="" [ngClass]="{'error-field': form.controls['firstName'].errors?.['required'] && form.controls['firstName'].touched}"/>
+    
+                <div *ngIf="form.controls['firstName'].errors?.['required'] && form.controls['firstName'].touched" class="validation-mark">
+                    <img src="validation-mark.svg"/>
+                    <p class="validation-text">שדה חובה</p>
+                </div>
+            </div>
+
+            <div class="form-field-container">
+                <div class="dot-row">
+                    <label for="lastName" class="form-field-name">שם משפחה</label>
+                    <h3 class="required-form-field" *ngIf="false">*</h3>
+                </div>
+                <input id="lastName" formControlName="lastName" value="" [ngClass]="{'error-field': form.controls['lastName'].errors?.['required'] && form.controls['lastName'].touched}"/>
+    
+                <div *ngIf="form.controls['lastName'].errors?.['required'] && form.controls['lastName'].touched" class="validation-mark">
+                    <img src="validation-mark.svg"/>
+                    <p class="validation-text">שדה חובה</p>
+                </div>
+            </div>
+
+            <div class="form-field-container">
+                <div class="dot-row">
+                    <label for="id-input" class="form-field-name">תעודת זהות</label>
+                    <h3 class="required-form-field" *ngIf="false">*</h3>
+                </div>
+                <input id="id-input" #IdInput (input)="OnIdInputChanged(IdInput)" formControlName="idNumber" value="" [ngClass]="{'error-field':(form.controls['idNumber'].errors?.['required'] && form.controls['idNumber'].touched)|| !isIdValid}"/>
+    
+                <div *ngIf="(form.controls['idNumber'].errors?.['required'] && form.controls['idNumber'].touched)" class="validation-mark">
+                    <img src="validation-mark.svg"/>
+                    <p class="validation-text">{{idErrorMessage}}</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-field-container">
+                <div class="dot-row">
+                    <label for="phone-number-input" class="form-field-name">טלפון נייד</label>
+                    <h3 class="multiple-required-form-field" *ngIf="false">*</h3>
+                </div>
+                <input id="phone-number-input" formControlName="phoneNumber" value=""/>
+            </div>
+    
+            <div class="form-field-container">
+                <label for="extra-phone-number-input" class="form-field-name">טלפון נוסף</label>
+                <input id="extra-phone-number-input" formControlName="extraPhoneNumber" value=""/>
+            </div>
+    
+            <div class="form-field-container">
+                <label for="fax-number" class="form-field-name">פקס</label>
+                <input id="fax-number" formControlName="faxNumber" value=""/>
+            </div>
+
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-field-container">
+                <div class="dot-row">
+                    <label for="email-input-field" class="form-field-name">דואר אלקטרוני</label>
+                    <h3 class="multiple-required-form-field" *ngIf="false">*</h3>
+                </div>
+                <input id="email-input-field" class="email-input-field" type="email" formControlName="email" email/>
+            </div>
+
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-field-container size-limit-for-matselect-container">
+                <div class="dot-row">
+                    <h3 class="form-field-name">ישוב</h3>
+                    <h3 class="multiple-required-form-field" *ngIf="false">*</h3>
+                </div>
+                <mat-select (selectionChange)="onCitySelectionChanged($event)" [(value)]="selectedCityOption" id="city-select">
+                    <mat-option *ngFor="let city of listOfHebrewCities" [value]="city">{{city}}</mat-option>
+                </mat-select>
+            </div>
+    
+            <div class="form-field-container">
+                <div class="dot-row">
+                    <label for="address-input" class="form-field-name">כתובת</label>
+                    <h3 class="multiple-required-form-field" *ngIf="false">*</h3>
+                </div>
+                <input id="address-input" formControlName="address" value=""/>
+            </div>
+    
+            <div class="form-field-container">
+                <div class="dot-row">
+                    <label for="zip-code-input" class="form-field-name">מיקוד</label>
+                    <h3 class="multiple-required-form-field" *ngIf="false">*</h3>
+                </div>
+                <input id="zip-code-input" class="size-limit-for-zipcode-input" formControlName="zipCode" value=""/>
+            </div>
+
+        </div>
+
+        <div class="multiple-error-message" *ngIf="showMultipleError">
+            <p class="multiple-error-message-asterisk" *ngIf="false">*</p>
+            <p class="multiple-error-message-text">יש למלא לפחות אחת מדרכי ההתקשרות: כתובת (עיר, רחוב ומיקוד), טלפון או דואר אלקטרוני.</p>
+        </div>
+
+        <div class="complaint-owner-container two-columns row-six">
+            <h3 class="form-field-name">תלונה בשם אדם אחר?</h3>
+            <div class="row-container">
+
+                <!--
+                    Make this radio button into a reusable component like the dropdown.
+                    Make it accept a list of options, and use *ngFor with that.
+                    Have an event for OptionChanged or something like that.
+                -->
+                
+                <app-custom-radio-button [optionsList]="radioButtonOptions" (selectedOptionEvent)="onRadioButtonClick($event)" selectedOption="{{getStringFromBool(isComplaintOnBehalfOfSomeoneElse)}}"></app-custom-radio-button>
+
+            </div>
+
+        </div>
+
+        <p class="error-message" *ngIf="formError.showError && isComplaintOnBehalfOfSomeoneElse == false">שגיאה: {{formError.errorMessage}}</p>
+
+        <div class="expanded-section row-seven six-columns">
+            
+            <div class="horizontal-line"></div>
+
+            <div class="description-text-container">
+
+                <img src="description-icon.svg" alt="אייקון נורה - המסמל אזור הסבר"/>
+
+                <span class="description-text">במקרה של תלונה בשם אדם אחר, יש למלא <p class="bold-inline">טופס</p> <a href="https://publiccomplaints.court.gov.il/Documents/YipuyKoach.docx" target="_blank" class="link-inline">יפוי כוח</a> ולהעלותו למערכת בשלב העלאת מסמכים.
+                    גורם או הורה הפונה בעניינם של קטינים המצויים תחת חסותו,<br/> 
+                    צריך לצרף <p class="bold-inline">צילום ת.ז או אסמכתא מתאימה</p> בשלב העלאת מסמכים</span>
+
+            </div>
+
+            <h3 class="sub-title">פרטי בא הכוח</h3>
+
+            <div class="inner-form-container">
+
+                <div class="form-row">
+
+                    <div class="form-field-container">
+                        <label for="agent-first-name" class="form-field-name">שם פרטי</label>
+                        <input id="agent-first-name" formControlName="agent_FirstName" value=""/>
+                    </div>
+    
+                    <div class="form-field-container">
+                        <label for="agent-last-name" class="form-field-name">שם משפחה</label>
+                        <input id="agent-last-name" formControlName="agent_LastName" value=""/>
+                    </div>
+    
+                    <div class="form-field-container">
+                        <label for="agent-id-number" class="form-field-name">תעודת זהות</label>
+                        <input id="agent-id-number" formControlName="agent_IdNumber" value=""/>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-field-container">
+                        <label for="agent-phone-number" class="form-field-name">טלפון נייד</label>
+                        <input id="agent-phone-number" formControlName="agent_PhoneNumber" value=""/>
+                    </div>
+    
+                    <div class="form-field-container">
+                        <label for="agent-extra-phone-number" class="form-field-name">טלפון נוסף</label>
+                        <input id="agent-extra-phone-number" formControlName="agent_ExtraPhoneNumber" value=""/>
+                    </div>
+    
+                    <div class="form-field-container">
+                        <label for="agent-fax-number" class="form-field-name">פקס</label>
+                        <input id="agent-fax-number" formControlName="agent_FaxNumber" value=""/>
+                    </div>
+
+                </div>                
+
+                <div class="form-row">
+
+                    <div class="form-field-container" style="margin-bottom: 5px;">
+                        <label for="agent-email" class="form-field-name">דואר אלקטרוני</label>
+                        <input id="agent-email" class="email-input-field" formControlName="agent_Email" value=""/>
+                    </div>
+
+                </div>
+
+                <div class="form-row center-text">
+                    <p class="error-message" *ngIf="formError.showError && isComplaintOnBehalfOfSomeoneElse == true">שגיאה: {{formError.errorMessage}}</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="button-container">
+        <div class="back-button-container">
+            <img src="back-arrow.svg"/>
+            <button class="prev-button" (click)="GoToPrevPage()">חזרה</button>
+        </div>
+        <button (click)="GoToNextPage()" class="next-button">המשך</button>
+    </div>
+
+</div>

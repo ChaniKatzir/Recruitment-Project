@@ -1,0 +1,454 @@
+@use '@angular/material' as mat;
+
+/* Reset margins for relevant UI elements */
+* 
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Apply Rubik font to all text elements */
+body 
+{
+    font-family: 'Rubik', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd 
+{
+    margin: 0;
+}
+
+ul, ol 
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+button 
+{
+    margin: 0;
+}
+
+:root
+{
+    --mdc-linear-progress-active-indicator-height: 12px;
+    --mdc-linear-progress-track-height: 12px;
+}
+
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: Rubik;
+    line-height: 100%;
+}
+
+*,
+*:before,
+*:after 
+{
+    box-sizing: border-box;
+}
+
+body
+{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #F4F8FE;
+    line-height: 100%;
+}
+
+html, body
+{
+    background-color: #F4F8FE;
+    line-height: 100%;
+}
+
+p, h1, h2, h3, h4, h5, h6
+{
+    margin: 0;
+    padding: 0;
+
+    user-select: none;
+
+    color: black;
+}
+
+ul
+{
+    list-style-position: inside;
+    list-style: none;
+
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+li
+{
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+
+    color: black;
+}
+
+.one-column
+{
+    grid-column: span 1;
+}
+
+.two-columns
+{
+    grid-column: span 2;
+}
+
+.three-columns
+{
+    grid-column: span 3;
+}
+
+.four-columns
+{
+    grid-column: span 4;
+}
+
+.six-columns
+{
+    grid-column: span 6;
+}
+
+.row-two
+{
+    grid-row: 2;
+    white-space: nowrap;
+}
+
+.row-three
+{
+    grid-row: 3;
+}
+
+.row-four
+{
+    grid-row: 4;
+}
+
+.row-five
+{
+    grid-row: 5;
+}
+
+.row-six
+{
+    grid-row: 6;
+}
+
+.row-seven
+{
+    grid-row: 7;
+}
+
+.form-field-container
+{
+    position: relative;
+    display: block;
+
+    text-align: start;
+
+    height: 100%;
+}
+
+.form-field-name
+{
+    color: #001E40;
+
+    font-size: 20px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: normal;
+
+    margin-bottom: 8px;
+} 
+
+input
+{
+    padding: 16px;
+
+    border: 1px solid #005EEE;
+    border-radius: 6px;
+
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    outline: none;
+
+    color: black;
+
+    background-color: white;
+}
+
+input:focus
+{
+    outline: 1px solid #005fee5b;
+    outline-style: solid;
+}
+
+textarea
+{
+    padding: 16px;
+
+    border: 1px solid #005EEE;
+    border-radius: 6px;
+
+    width: 100%;
+    height: 100%;
+
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    outline: none;
+    resize: none;
+
+    color: black;
+
+    background-color: white;
+}
+
+textarea:focus
+{
+    outline: 1px solid #005fee5b;
+    outline-style: solid;
+}
+
+.custom-bullet
+{
+    display: inline-block;
+
+    width: 8px;
+    height: 8px;
+    aspect-ratio: 1/1;
+
+    background-color: #005EEE;
+    border-radius: 50%;
+
+    margin-left: 5px;
+}
+
+.bold-inline
+{
+    display: inline-block;
+    font-weight: 500;
+}
+
+.link-inline
+{
+    margin-right: 4px;
+    display: inline-block;
+
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+
+    color: #0156d6;
+
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+}
+
+
+mat-select
+{
+    border: 1px solid #005EEE;
+    border-radius: 6px;
+    font-size: 20px !important;
+    font-weight: 400;
+    font-style: normal;
+    line-height: normal;
+    padding: 0px !important;
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-mdc-select-arrow 
+{
+    // Hide the default arrow
+    opacity: 0;
+}
+  
+.mat-mdc-select-arrow-wrapper 
+{
+    // Position your custom arrow
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    &::after 
+    {
+        // Add your custom SVG as a background image
+        content: '';
+
+        right: 0;
+
+        width: 12px !important;
+        height: 12px !important;
+        
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-image: url('../public/dropdown-arrow.svg');
+    }
+}
+
+.mat-mdc-option, .cdk-overlay-pane, .mat-mdc-select-panel, .cdk-overlay-backdrop, .cdk-overlay-backdrop-showing
+{
+    --mat-sys-surface-container: white;
+    border-radius: 6px !important;
+}
+
+.mat-mdc-option-active
+{
+    background-color: rgb(237, 244, 255);
+}
+
+.mat-mdc-select-min-line
+{
+    font-size: 20px !important;
+    font-weight: 400;
+    font-style: normal;
+    line-height: normal;
+}
+
+.mdc-list-item__primary-text, .mat-mdc-option
+{
+    font-family: Rubik !important;
+    font-size: 20px !important;
+    font-weight: 400;
+    font-style: normal;
+    line-height: normal;
+    border-radius: 6px;
+}
+
+.cdk-overlay-pane
+{
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-right: -1px;
+    border: 1px solid #005EEE;
+
+    border-radius: 6px;
+}
+
+.mat-mdc-select-trigger
+{
+    padding: 15px !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple) 
+{
+    background-color: rgb(237, 244, 255) !important;
+}
+
+.validation-mark2
+{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+
+    gap: 7px;
+
+    margin-top: 22px;
+}
+
+.validation-text2
+{
+    color:rgb(175, 27, 27);
+}
+
+.validation-mark
+{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+
+    gap: 7px;
+
+    margin-top: 2px;
+}
+
+.validation-text
+{
+    color:rgb(175, 27, 27);
+}
+
+.character-counter-mark
+{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+
+    gap: 7px;
+
+    margin-top: 2px;
+}
+
+.character-counter-text
+{
+    color:rgb(175, 27, 27);
+}
+
+.error-field
+{
+    border: 1px solid rgb(175, 27, 27);
+}
+
+.dot-row
+{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.required-form-field
+{
+    margin-top: 0px;
+    font-family: Rubik;
+    font-size: 22px;
+    color: rgb(196, 60, 60);
+}
+
+
+/* For Webkit browsers (Chrome, Safari, Opera) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+
+}
+
+/* For Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+label
+{
+    display: block;
+}

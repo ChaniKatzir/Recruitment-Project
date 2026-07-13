@@ -1,0 +1,99 @@
+<div class="main-container">
+
+    <div class="title-container">
+        <h1 class="main-title">טופס פניות הציבור</h1>
+        <img class="main-logo" src="Check.svg" alt="לוגו טופס פניות הציבור"/>
+    </div>
+
+    <h2 class="sub-title">העלאת מסמכים</h2>
+
+    <div class="form-container">
+
+        <div class="description-container">
+
+            <img src="description-icon.svg" alt="אייקון נורה - המסמל אזור הסבר"/>
+
+            <div>
+
+                <p class="description-title">לתשומת ליבך</p>
+                <ul>
+                    <li><div class="custom-bullet"></div> סוגי הקבצים שניתן לצרף: doc, docx, pdf, jpg, png, gif, ogg, mp3, mp4, msg</li>
+                    <li><div class="custom-bullet"></div> גודל מקסימלי לקובץ בודד 10MB</li>
+                    <li><div class="custom-bullet"></div> נפח כולל של כל הקבצים לא יעלה על <p class="bold-inline">50MB</p></li>
+                    <li><div class="custom-bullet"></div>לצמצום נפחים הסריקה צריכה להתבצע בשחור לבן, וברזולוציה שהינה עד 300dpi</li>
+                    <li><div class="custom-bullet"></div>אין לצרף קבצים מוגנים בסיסמא</li>
+                    <li><div class="custom-bullet"></div><a href="https://forms.gov.il/forms/resources/FileSizeReductionGuide.pdf" target="_blank">למדריך הקטנת קבצים</a></li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div (click)="YipuyKoachFilePicker.click()" class="file-select-container" *ngIf="didUseYipuyKoach && !yipuyKoachFile">
+
+            <img src="file-picker-icon.svg" alt="אייקון בצורת סמל פלוס לטובת העלאת קובץ יפוי כוח"/>
+            <p class="file-select-text">צירוף ייפוי כוח</p>
+            <input id="YipuyKoachFilePicker" #YipuyKoachFilePicker (change)="onYipuyKoachFileSelected($event)" type="file" style="display: none;" accept=".pdf,.doc,.docx,.png,.jpeg,.jpg,.gif,.ogg,.mp4,.mp3,.msg"/>
+
+            <div class="error-message-container" *ngIf="showErrorMessage">
+                <img src="validation-mark.svg" alt="תמונה בצורת איקס אדום המסמל בעיה במילוי הטופס - חסר טופס יפוי כוח"/>
+                <small class="error-message">
+                    שדה חובה - נא לצרף מסמך ייפוי כוח
+                </small>
+            </div>
+
+        </div>
+
+        <div class="uploaded-file-container extra-margin" *ngIf="yipuyKoachFile">
+            <div class="row-container">
+                <img [src]="yipuyKoachFile.statusImage" alt="תמונת סטטוס העלאה"/>
+                <p class="uploaded-file-name">{{yipuyKoachFile.fileName}}</p>
+                <p class="uploaded-file-size">({{yipuyKoachFile.fileSize}})</p>
+            </div>
+
+            <div class="row-container on-top">
+                <img (click)="DeleteYipuyKoachFile($event)" class="delete-file-icon" src="trash-can-icon.svg" alt="אייקון בצורת פח לטובת מחיקת קובץ יפוי כוח שהועלה"/>
+            </div>
+        </div>
+
+        <div (click)="filePickerInput.click()" class="file-select-container">
+
+            <img src="file-picker-icon.svg" alt="אייקון בצורת סמל פלוס לטובת העלאת קבצים"/>
+            <label class="file-select-text">צירוף מסמך</label>
+
+        </div>
+
+        <input id="filePicker" #filePickerInput (change)="onFileSelected($event)" multiple type="file" style="display: none;" accept=".pdf,.doc,.docx,.png,.jpeg,.jpg,.gif,.ogg,.mp4,.mp3,.msg"/>
+
+        <div class="uploaded-file-container" *ngFor="let uploadedFile of selectedFiles; let i = index">
+            <div class="row-container">
+                <img [src]="uploadedFile.statusImage" alt="תמונת סטטוס העלאה"/>
+                <p class="uploaded-file-name">{{uploadedFile.fileName}}</p>
+                <p class="uploaded-file-size">({{uploadedFile.fileSize}})</p>
+            </div>
+
+            <div class="row-container">
+                <p class="uploaded-file-error-message" *ngIf="!uploadedFile.status">Error message</p>
+                <img (click)="DeleteFile(i)" class="delete-file-icon" src="trash-can-icon.svg" alt="אייקון בצורת פח לטובת מחיקת קובץ שנבחר להעלאה"/>
+            </div>
+        </div>
+
+        <div class="file-error-message-container" *ngIf="showFileErrorMessage">
+            <img src="validation-mark.svg" alt="תמונה בצורת איקס אדום המסמל בעיה במילוי הטופס - חסר קובץ"/>
+            <p class="error-message">
+                {{fileErrorMessage}}
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="button-container">
+        <div class="back-button-container">
+            <img src="back-arrow.svg"/>
+            <button class="prev-button" (click)="GoToPrevStep()">חזרה</button>
+        </div>
+        <button (click)="GoToNextStep()" class="next-button">המשך</button>
+    </div>
+
+</div>

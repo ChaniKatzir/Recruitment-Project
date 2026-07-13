@@ -1,0 +1,22 @@
+{
+	"production":
+	{
+		"apiUrl": ""
+	},
+	"dmztest":
+	{
+		"apiUrl": ""
+	},
+	"crm9d":
+	{
+		"apiUrl": ""
+	},
+	"localhost":
+	{
+		"apiUrl": ""
+	},
+	"dmztest_f5":
+	{
+		"apiUrl": ""
+	}
+}

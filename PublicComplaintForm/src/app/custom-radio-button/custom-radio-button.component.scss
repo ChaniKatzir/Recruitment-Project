@@ -1,0 +1,64 @@
+:host
+{
+    display: contents;
+}
+
+.radio-button-container
+{
+    display: inline-flex;
+    flex-direction: row;
+
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.radio-button-container:hover
+{
+    cursor: pointer;
+}
+
+.radio-button-outer-circle
+{
+    width: 24px;
+    height: 24px;
+    aspect-ratio: 1/1;
+
+    border: 2px solid #005EEE;
+
+    border-radius: 50%;
+
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+.radio-button-inner-circle
+{
+    width: 0px;
+    height: 0px;
+    aspect-ratio: 1/1;
+
+    background-color: #005EEE;
+
+    border-radius: 50%;
+
+    transition: height 0.1s ease-in-out, width 0.1s ease-in-out;
+}
+
+.radio-button-text
+{
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.selected-radio-button
+{
+    width: 14px;
+    height: 14px;
+    aspect-ratio: 1/1;
+}

@@ -1,0 +1,46 @@
+<app-top-bar></app-top-bar>
+
+<div class="main-area">
+    <div class="mobile-progress-bar" *ngIf="currentStep < 6">
+
+        <mat-progress-bar [value]="currentStep * 20" mode="determinate"></mat-progress-bar>
+
+    </div>
+    <div class="form-page-container">
+        <router-outlet (activate)="onChildActivate()"/>
+    </div>
+</div>
+
+<div class="breadcrumbs-container">
+    <div id="step-1" class="active-step">
+    </div>
+    <p id="step-1-text" class="active-step-text">סוג הפניה</p>
+    <div id="step-2-path" class="inactive-path"></div>
+
+    <div id="step-2" class="inactive-step">
+    </div>
+    <p id="step-2-text" class="inactive-step-text">פרטי הפונה</p>
+    <div id="step-3-path" class="inactive-path"></div>
+
+    <div id="step-3" class="inactive-step">
+    </div>
+    <p id="step-3-text" class="inactive-step-text">פרטי הפניה</p>
+    <div id="step-4-path" class="inactive-path"></div>
+
+    <div id="step-4" class="inactive-step">
+    </div>
+    <p id="step-4-text" class="inactive-step-text">העלאת מסמכים</p>
+    <div id="step-5-path" class="inactive-path"></div>
+
+    <div id="step-5" class="inactive-step">
+    </div>
+    <p id="step-5-text" class="inactive-step-text">סיכום ושליחה</p>
+</div>
+
+<div class="terms-of-service-container">
+    <a href="https://www.court.gov.il/NGCS.Web.Site/Docs/WebTermsOfUse.pdf" target="_blank" class="terms-of-service-link">תנאי שימוש</a>
+</div>
+
+<!-- <div style="height: 0; overflow: none;">
+    Version 1.0.0
+</div> -->

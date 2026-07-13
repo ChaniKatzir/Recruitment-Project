@@ -1,0 +1,166 @@
+.main-area
+{
+    width: 100%;
+    padding-top: 80px;
+    background-color: #F4F8FE;
+}
+
+.breadcrumbs-container
+{
+    position: fixed;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 2vw;
+}
+
+.active-step
+{
+    margin-top: 10px;
+
+    height: 20px;
+    aspect-ratio: 1/1;
+
+    background-color: transparent;
+    border: 3px solid #005EEE;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+}
+
+.inactive-step
+{
+    margin-top: 10px;
+
+    width: 12px;
+    aspect-ratio: 1/1;
+
+    background-color: #D7E6FC;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+}
+
+.active-step-text
+{
+    margin-top: 10px;
+
+    color: #005EEE;
+    text-align: center;
+    font-size: clamp(14px, 0.5em, 18px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.inactive-step-text
+{
+    margin-top: 10px;
+
+    color: #001E40;
+    text-align: center;
+    font-size: clamp(14px, 0.5em, 18px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.active-path
+{
+    margin-top: 10px;
+
+    width: 4px;
+    height: 40px;
+
+    border-radius: 10px;
+    background-color: #005EEE;
+}
+
+.inactive-path
+{
+    margin-top: 10px;
+
+    width: 4px;
+    height: 40px;
+
+    border-radius: 10px;
+    background-color: #D7E6FC;
+}
+
+.finished-step
+{
+    height: 20px;
+    aspect-ratio: 1/1;
+
+    background: #005EEE;
+    border-radius: 50%;
+    position: relative;
+    margin-top: 5px;
+}
+
+.finished-step::after 
+{
+    content: "";
+    position: absolute;
+    left: 7px;   
+    top: 4px;    
+    width: 6px;  
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0; 
+    transform: rotate(45deg);
+}
+
+.mobile-progress-bar
+{
+    margin-top: 30px;
+    width: 80%;
+    margin: 30px auto;
+
+    border-radius: 20% !important;
+    display: none;
+}
+
+progress
+{
+    width: 100%;
+    height: 30px;
+    border: none;
+}
+
+.terms-of-service-container
+{
+    margin: auto;
+    width: fit-content;
+
+    margin-top: 50px;
+    padding-bottom: 50px;
+}
+
+.terms-of-service-link
+{
+    font-size: clamp(14px, 1.2vw, 18px);
+    color: #005EEE;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1300px) 
+{
+    .breadcrumbs-container
+    {
+        display: none;
+    }
+
+    .mobile-progress-bar
+    {
+        display: block;
+        width: 70%;
+    }
+}

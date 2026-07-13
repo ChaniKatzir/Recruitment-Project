@@ -1,0 +1,24 @@
+<div class="main-container">
+
+    <div class="title-container">
+        <h1 class="main-title">טופס פניות הציבור</h1>
+        <img class="main-logo" src="Check.svg" alt="לוגו טופס פניות הציבור"/>
+    </div>
+
+    <h2 class="sub-title">פרטי הפניה</h2>
+
+    <div class="form-container" [formGroup]="form">
+
+    </div>
+
+    <div class="button-container">
+
+        <div class="back-button-container">
+            <img src="back-arrow.svg"/>
+            <button class="prev-button" (click)="GoToPrevPage()">חזרה</button>
+        </div>
+        
+        <button class="next-button" (click)="GoToNextStep()">המשך</button>
+    </div>
+
+</div>
