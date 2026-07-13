@@ -52,7 +52,7 @@ export class FormHandlerService
 			}),
 
 			step3: this.fb.group({
-				contactDescription: ['', Validators.required],
+				contactDescription: ['', [Validators.required, Validators.maxLength(7000)],],
 				courtCaseNumber: ['', Validators.pattern('[0-9]+')],
 				courthouse: ['']
 			})
@@ -148,5 +148,45 @@ export class FormHandlerService
 		const localURL = this.configService.getApiUrl() + "/submit-form";
 
 		return this.http.post(localURL, submitFormData, { responseType: 'text' });
+	}
+
+	resetForm(): void
+	{
+		this.formData.step1.reset({
+			contactType: '',
+			isFollowUp: false,
+			previousInquiryNumber: ''
+		});
+
+		this.formData.step2.reset({
+			firstName: '',
+			lastName: '',
+			phoneNumber: '',
+			extraPhoneNumber: '',
+			faxNumber: '',
+			idNumber: '',
+			email: '',
+			zipCode: '',
+			city: '',
+			address: '',
+			title: -1,
+			isComplaintOnBehalfOfSomeone: false,
+			agent_FirstName: '',
+			agent_LastName: '',
+			agent_Email: '',
+			agent_PhoneNumber: '',
+			agent_ExtraPhoneNumber: '',
+			agent_FaxNumber: '',
+			agent_IdNumber: ''
+		});
+
+		this.formData.step3.reset({
+			contactDescription: '',
+			courtCaseNumber: '',
+			courthouse: ''
+		});
+
+		this.uploadedFiles = [];
+		this.YipuyKoachFile = undefined;
 	}
 }

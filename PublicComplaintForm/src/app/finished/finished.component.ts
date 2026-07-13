@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbsManagerService } from '../breadcrumbs-manager.service';
 import { Router, RouterModule } from '@angular/router';
+import { FormHandlerService } from '../form-handler.service';
 
 @Component({
 	selector: 'app-finished',
@@ -12,7 +13,7 @@ import { Router, RouterModule } from '@angular/router';
 
 export class FinishedComponent implements OnInit 
 {
-	constructor(private breadcrumbsManagerService: BreadcrumbsManagerService, private router: Router) {}
+	constructor(private breadcrumbsManagerService: BreadcrumbsManagerService, private router: Router, private formHandlerService: FormHandlerService) {}
 	
 	ngOnInit(): void 
 	{
@@ -21,6 +22,7 @@ export class FinishedComponent implements OnInit
 
 	NavigateHome()
 	{
+		this.formHandlerService.resetForm();
 		this.router.navigate(['/']);
 	}
 }

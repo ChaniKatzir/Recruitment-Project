@@ -65,7 +65,20 @@ builder.Services.AddAntiforgery(options =>
     options.HeaderName = "X-CSRF-TOKEN";
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularClient", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("AngularClient");
 
 if (app.Environment.IsDevelopment())
 {
@@ -123,6 +136,53 @@ app.MapGet("/courts", async ([FromServices] ILog log,
     return Results.Ok(new { courtsList });
 });
 
+app.MapGet("/monthly-report", () =>
+{
+    IReadOnlyList<MonthlyComplaintsReportItem> report =
+    [
+        new()
+        {
+            DepartmentId = 1,
+            DepartmentName = "מחלקת פניות הציבור",
+
+            CurrentMonthComplaints = 128,
+            PreviousMonthComplaints = 114,
+            SameMonthPreviousYearComplaints = 120,
+
+            DifferenceFromPreviousMonth = 14,
+            DifferenceFromPreviousYear = 8
+        },
+
+        new()
+        {
+            DepartmentId = 2,
+            DepartmentName = "מחלקת ערעורים",
+
+            CurrentMonthComplaints = 87,
+            PreviousMonthComplaints = 93,
+            SameMonthPreviousYearComplaints = 82,
+
+            DifferenceFromPreviousMonth = -6,
+            DifferenceFromPreviousYear = 5
+        },
+
+        new()
+        {
+            DepartmentId = 3,
+            DepartmentName = "מזכירות בתי משפט",
+
+            CurrentMonthComplaints = 205,
+            PreviousMonthComplaints = 198,
+            SameMonthPreviousYearComplaints = 210,
+
+            DifferenceFromPreviousMonth = 7,
+            DifferenceFromPreviousYear = -5
+        }
+    ];
+
+    return Results.Ok(report);
+});
+
 app.MapGet("/captcha", async ([FromServices] CaptchaService cs,
                                 [FromServices] ILog log,
                                 IMemoryCache cache) =>
@@ -165,96 +225,81 @@ app.MapPost("/survey", async([FromServices] IAntiforgery antiforgery,
     return Results.Ok(surveyData);
 }).DisableAntiforgery();
 
-app.MapPost("/submit-form", async ([FromServices] IAntiforgery antiforgery,
-                                    [FromForm] JsonElement formData,
-                                    [FromForm] IFormFileCollection files,
+app.MapPost("/submit-form", async (
+                                    HttpRequest request,
                                     [FromServices] ILog log,
-                                    [FromServices] DatabaseService db,
                                     [FromServices] CaptchaService cs,
-                                    IMemoryCache cache,
-                                    HttpContext context) =>
+                                    IMemoryCache cache) =>
 {
-    SanitizingService sanitizingService = new SanitizingService();
-    sanitizingService.SanitizeClass(formData);
+    var submittedForm = await request.ReadFormAsync();
 
-    //await logger.LogAsync($"Received {files.Count} files");
-    log.Info($"Received {files.Count} files");
+    var submittedFields = submittedForm
+        .Where(field => field.Key != "captchaCode"
+                     && field.Key != "captchaSessionId")
+        .ToDictionary(
+            field => field.Key,
+            field => field.Value.ToString());
 
-    foreach(var file in files)
+    var captchaSessionId =
+        submittedForm["captchaSessionId"].ToString();
+
+    var captchaCode =
+        submittedForm["captchaCode"].ToString();
+
+    if (string.IsNullOrWhiteSpace(captchaSessionId) ||
+        string.IsNullOrWhiteSpace(captchaCode))
     {
-        var extension = Path.GetExtension(file.FileName);
-
-        if(string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
+        return Results.BadRequest(new
         {
-            return Results.Ok($"File '{file.FileName}' has an illegal file extension.");
-        }
+            Message = "Captcha data is missing."
+        });
     }
 
-    var inquiryId = Guid.NewGuid();
+    var isCaptchaValid = cs.ValidateCaptcha(
+        captchaSessionId,
+        captchaCode,
+        cache);
 
-    var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-    uploadsPath = Path.Combine(envConfig.SaveFileFolder, inquiryId.ToString());
-
-    if (!Directory.Exists(uploadsPath))
-        Directory.CreateDirectory(uploadsPath);
+    if (!isCaptchaValid)
+    {
+        return Results.BadRequest(new
+        {
+            Message = "Invalid captcha."
+        });
+    }
 
     var savedFiles = new List<string>();
 
-    if (files is not null)
+    foreach (var file in submittedForm.Files)
     {
-        log.Info("Files detected. File count is " + files.Count);
+        var extension = Path.GetExtension(file.FileName);
 
-        foreach (var file in files)
+        if (string.IsNullOrWhiteSpace(extension) ||
+            !allowedExtensions.Contains(extension))
         {
-            if (file.Length > 0)
+            return Results.BadRequest(new
             {
-                log.Info("File being saved");
-
-                var filePath = Path.Combine(uploadsPath, file.FileName);
-                using var stream = new FileStream(filePath, FileMode.Create);
-              
-                await file.CopyToAsync(stream);
-                savedFiles.Add(file.FileName);
-
-                log.Info("File was saved.");
-            }
+                Message =
+                    $"File '{file.FileName}' has an illegal file extension."
+            });
         }
-    }
-    else
-    {
-        log.Info("No files detected");
+
+        savedFiles.Add(file.FileName);
     }
 
-    JsonElement captchaSessionId;
-    JsonElement captchaCode;
-
-    if (!formData.TryGetProperty("captchaSessionId", out captchaSessionId))
-        return Results.BadRequest("Invalid input.");
-
-    if (!formData.TryGetProperty("captchaCode", out captchaCode))
-        return Results.BadRequest("Invalid input.");
-
-    if (captchaSessionId.ValueKind != JsonValueKind.String)
-        return Results.BadRequest("Must be a string.");
-
-    if (captchaCode.ValueKind != JsonValueKind.String)
-        return Results.BadRequest("Must be a string.");
-
-    var isCaptchaValid = cs.ValidateCaptcha(captchaSessionId.GetString(), captchaCode.GetString(), cache);
-
-    if (!isCaptchaValid)
-        return Results.Ok("Invalid captcha.");
-
-    // פה יש צורך לבצע שמירה של הנתונים בצורה כזאת או אחרת.
+    log.Info(
+        $"Form received successfully. " +
+        $"Fields: {submittedFields.Count}, " +
+        $"Files: {submittedForm.Files.Count}");
 
     var response = new
     {
         Message = "Form submitted successfully!",
-        FormData = formData,
+        FormData = submittedFields,
         UploadedFiles = savedFiles
     };
 
-    return Results.Json(response);
+    return Results.Ok(response);
 }).DisableAntiforgery();
 
 app.MapGet("/log", async (HttpContext context, [FromServices] IConfiguration config) =>
