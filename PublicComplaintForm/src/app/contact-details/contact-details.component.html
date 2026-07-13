@@ -7,7 +7,126 @@
 
     <h2 class="sub-title">פרטי הפניה</h2>
 
-    <div class="form-container" [formGroup]="form">
+	<div
+		class="form-container"
+		[formGroup]="form"
+	>
+
+		<div class="description-text-container">
+			<p class="description-text">
+				יש לכלול תיאור נושא ומהות הפניה. יש לנסח באופן
+				תמציתי וברור את מה שטוענים או מבקשים, תוך ציון
+				פרטים רלוונטיים לצורך טיפול בפניה ומועדים של
+				האירועים בהם עוסקת הפניה.
+			</p>
+		</div>
+
+        <div class="form-field-container description-field-container">
+
+			<label
+				for="contact-description-textarea"
+				class="form-field-name"
+			>
+				מהות הפנייה
+				<span class="required-mark">*</span>
+			</label>
+
+			<textarea
+				id="contact-description-textarea"
+				formControlName="contactDescription"
+				maxlength="7000"
+				rows="9"
+				(input)="OnTextAreaChanged($event)"
+				[class.error-field]="
+					form.get('contactDescription')?.invalid &&
+					form.get('contactDescription')?.touched
+				"
+			></textarea>
+
+			<div class="characters-counter">
+				{{ textAreaRemainingCharacters }}
+			</div>
+
+			<div
+				class="validation-mark"
+				*ngIf="
+					form.get('contactDescription')?.hasError('required') &&
+					form.get('contactDescription')?.touched
+				"
+			>
+				<img
+					src="validation-mark.svg"
+					alt=""
+				/>
+
+				<p class="validation-text">
+					יש להזין את מהות הפנייה
+				</p>
+			</div>
+
+		</div>
+
+		<div class="form-row">
+
+			<div class="form-field-container">
+
+				<label
+					for="court-case-number"
+					class="form-field-name"
+				>
+					מספר תיק בית משפט
+				</label>
+
+				<input
+					id="court-case-number"
+					type="text"
+					formControlName="courtCaseNumber"
+				/>
+                <div
+	class="validation-mark"
+	*ngIf="
+		form.get('courtCaseNumber')?.hasError('pattern') &&
+		form.get('courtCaseNumber')?.touched
+	"
+>
+	<img
+		src="validation-mark.svg"
+		alt=""
+	/>
+
+	<p class="validation-text">
+		יש להזין ספרות בלבד
+	</p>
+</div>
+
+			</div>
+
+			<div class="form-field-container dropdown-element">
+
+				<label
+					for="courthouse-select"
+					class="form-field-name"
+				>
+					בית משפט
+				</label>
+
+				<mat-select
+					id="courthouse-select"
+					formControlName="courthouse"
+					placeholder="בחר בית משפט"
+					(selectionChange)="OnCourtSelectionChanged($event)"
+				>
+					<mat-option
+						*ngFor="let court of courtsList"
+						[value]="court"
+					>
+						{{ court }}
+					</mat-option>
+				</mat-select>
+
+			</div>
+
+		</div>
 
     </div>
 
@@ -15,10 +134,10 @@
 
         <div class="back-button-container">
             <img src="back-arrow.svg"/>
-            <button class="prev-button" (click)="GoToPrevPage()">חזרה</button>
+            <button type="button" class="prev-button" (click)="GoToPrevPage()">חזרה</button>
         </div>
         
-        <button class="next-button" (click)="GoToNextStep()">המשך</button>
+        <button type="button" class="next-button" (click)="GoToNextStep()">המשך</button>
     </div>
 
 </div>

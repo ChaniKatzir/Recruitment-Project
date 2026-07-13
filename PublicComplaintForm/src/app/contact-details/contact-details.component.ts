@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -45,46 +45,42 @@ export class ContactDetailsComponent implements OnInit
 	async ngOnInit() 
 	{
 		this.form = this.formBuilder.group({
-			contactDescription: ['', Validators.required],
-			courtCaseNumber: [''],
+			contactDescription: ['',[ Validators.required,Validators.maxLength(7000)]],
+			courtCaseNumber: ['', Validators.pattern('[0-9]+')],
 			courthouse: ['']
 		});
-		//this.form = this.formHandlerService.getStepValues('3');
-
-		(await this.courtHandlerService.getCourtsList()).subscribe({
-			next: (data: any) => {
-				this.courtsList = data.courtsList;
-
-				console.log(data);
-			},
-			error: (error: any) => {
-				console.log(error);
-			},
-			complete: () => {
-				
-			}
-		})
-
 		this.updateFormGroup();
 
-		const textArea = document.getElementById('contact-description-textarea') as HTMLTextAreaElement;
-		const currentValue = textArea.value;
+	try
+	{
+		(await this.courtHandlerService.getCourtsList()).subscribe({
+			next: (data: any) => {
+				if (
+					Array.isArray(data?.courtsList) &&
+					data.courtsList.length > 0 &&
+					typeof data.courtsList[0] === 'string'
+				)
+				{
+				this.courtsList = data.courtsList;
 
-		const lengthRemaining = 7000 - currentValue.length;
-
-		this.textAreaRemainingCharacters = `${lengthRemaining} תווים נותרו`;
-
-		if(lengthRemaining < 0)
-		{
-			textArea.value = currentValue.substring(0, 7000);
-			this.textAreaRemainingCharacters = `0 תווים נותרו`;
-			this.textAreaRemainingCharacters = `0 תווים נותרו`;
-			console.log("Zero tavim.");
-		}
-
-		
+				}
+			},
+			error: (error: any) => {
+				console.log(
+					'Could not load courts from the server. Using local list.',
+					error
+				);
+			}
+		});
 	}
-
+	catch (error)
+	{
+		console.log(
+			'Could not load courts from the server. Using local list.',
+			error
+		);
+	}
+}
 	ngAfterViewInit(): void
 	{
 		this.breadcrumbsManagerService.setStep(3);
@@ -103,21 +99,17 @@ export class ContactDetailsComponent implements OnInit
 
 	GoToNextStep()
 	{
-		console.log(this.form.get('courthouse').value);
-		this.formHandlerService.updateStepFields('3', this.form);
-		//this.form = this.formHandlerService.getStepValues('3');
+		if (this.form.invalid)
+		{this.form.markAllAsTouched();
 
-		if(!this.form.valid)
-		{
-			console.log(this.form.errors);
-
-			Object.keys(this.form.controls).forEach(field => {
-				const control = this.form.get(field);
-				control?.markAsTouched({ onlySelf: true });
-			});
+				console.log('Invalid form:',this.form.value,this.form.controls);
 
 			return;
 		}
+			this.formHandlerService.updateStepFields(
+				'3',
+				this.form
+			);
 
 		this.router.navigate(['/step4']);
 	}
@@ -130,7 +122,7 @@ export class ContactDetailsComponent implements OnInit
 
 	updateFormGroup(): void 
 	{
-		var stepForm = this.formHandlerService.getStepValues('3');
+		const stepForm = this.formHandlerService.getStepValues('3');
 
 		Object.keys(stepForm.controls).forEach((controlName) => {
 
@@ -145,6 +137,11 @@ export class ContactDetailsComponent implements OnInit
 			else if(this.form.contains(controlName))
 				this.form?.get(controlName)?.setValue(stepForm.get(controlName)?.value);
 		});
+		const description =
+			this.form.get('contactDescription')?.value ?? '';
+
+		this.textAreaRemainingCharacters =
+			`${7000 - description.length} תווים נותרו`;
 	}
 
 	OnTextAreaChanged(event: Event)
@@ -154,12 +151,6 @@ export class ContactDetailsComponent implements OnInit
 
 		const lengthRemaining = 7000 - currentValue.length;
 
-		this.textAreaRemainingCharacters = `${lengthRemaining} תווים נותרו`;
-
-		if(lengthRemaining < 0)
-		{
-			textArea.value = currentValue.substring(0, 7000);
-			this.textAreaRemainingCharacters = `0 תווים נותרו`;
-		}
+		this.textAreaRemainingCharacters = `${Math.max(lengthRemaining, 0)} תווים נותרו`;
 	}
 }
