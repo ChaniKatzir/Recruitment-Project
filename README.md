@@ -2,122 +2,291 @@
 
 ## Overview
 
-This project extends the existing **Public Complaint Form** application by implementing the required functionality described in the assignment while preserving the existing architecture and coding style.
+This project extends the existing **Public Complaint Form** application according to the supplied home-assignment requirements.
 
-The goal was to integrate the new functionality naturally into the existing codebase while making the minimum necessary changes, maintaining consistency with the project's current design and conventions.
+The implementation was designed to integrate naturally into the existing codebase while preserving the current architecture, conventions and technologies. Only the changes required for the assignment were introduced.
 
 ---
 
 ## Implemented Tasks
 
-### 1. Contact Details Step
+### Contact Details Step
 
-Implemented the **"Contact Details"** step, including:
+Implemented the **Contact Details** step of the complaint wizard.
 
-- Complaint description (required, maximum 7000 characters)
-- Court case number
-- Court selection
-- Character counter
-- Client-side validation
-- Navigation between wizard steps
-- Preserving entered data while navigating between steps
+The step includes:
 
----
+* Complaint description
+* Required-field validation
+* Maximum length of 7,000 characters
+* Remaining-character counter
+* Court case number
+* Numeric validation for the court case number
+* Court selection
+* Navigation to the previous and next wizard steps
+* Preservation of entered values while navigating between wizard steps
 
-### 2. Form Submission
-
-Extended the existing submission flow.
-
-The backend now:
-
-- Receives the complete form as `multipart/form-data`
-- Validates the captcha
-- Validates uploaded file extensions
-- Returns the submitted form data as JSON
-- Returns the uploaded file names
-
-According to the assignment requirements, no database persistence was implemented.
+The existing `FormHandlerService` is used to store the form state between routed components.
 
 ---
 
-### 3. Monthly Complaints Report API
+### Form Submission
 
-Added a new endpoint:
+The existing form-submission flow was completed and verified.
 
+The frontend sends the full form as:
+
+```text
+multipart/form-data
 ```
+
+This format is used because the request can contain both regular form fields and uploaded files.
+
+The backend:
+
+* Reads all submitted form fields
+* Validates captcha details
+* Validates uploaded file extensions
+* Returns the submitted data as JSON
+* Returns the names of uploaded files
+* Does not persist the complaint, according to the assignment requirement
+
+Example endpoint:
+
+```text
+POST /submit-form
+```
+
+---
+
+### Monthly Complaints Report API
+
+Added the following endpoint:
+
+```text
 GET /monthly-report
 ```
 
-The endpoint returns sample monthly complaint statistics per department.
+The endpoint returns monthly complaint statistics per department in JSON format.
 
-Each report item contains:
+Each item contains:
 
-- Department ID
-- Department name
-- Current month complaints
-- Previous month complaints
-- Same month previous year complaints
-- Difference from previous month
-- Difference from previous year
+* Department ID
+* Department name
+* Current-month complaint count
+* Previous-month complaint count
+* Complaint count for the same month in the previous year
+* Difference from the previous month
+* Difference from the previous year
 
-The endpoint currently returns mock data, as permitted by the assignment.
+The assignment permits the use of mock data, therefore the endpoint currently returns representative sample data.
+
+In a production implementation, the endpoint would execute the supplied SQL query through a data-access or service layer.
 
 ---
 
-### 4. SQL Solution
+### SQL Monthly Report
 
-Implemented an SQL query that generates a monthly complaints report including:
+Added an SQL solution for a monthly complaints report.
 
-- Total complaints per department
-- Comparison with the previous month
-- Comparison with the same month in the previous year
+The query returns, for each department:
 
-The solution:
+* Total complaints in the requested month
+* Total complaints in the previous month
+* Total complaints in the same month of the previous year
+* Difference from the previous month
+* Difference from the previous year
 
-- Uses date ranges instead of `MONTH()` / `YEAR()` functions to allow efficient index usage.
-- Uses `LEFT JOIN` so departments without complaints are still included.
-- Includes indexing recommendations for better performance.
+The query uses:
+
+* `DATEADD`
+* `DATEFROMPARTS`
+* `LEFT JOIN`
+* Conditional aggregation with `SUM(CASE...)`
+* A CTE for improved readability
+
+Date ranges are written as:
+
+```sql
+CreatedAt >= @StartDate
+AND CreatedAt < @EndDate
+```
+
+This avoids errors caused by time components and allows SQL Server to use an index on the date column more effectively.
+
+A detailed explanation and performance recommendations are included alongside the SQL solution.
+
+---
+
+## Project Structure
+
+The project contains two main applications:
+
+```text
+PublicComplaintForm/
+    Angular frontend
+
+PublicComplaintForm_API/
+    ASP.NET Core backend
+```
+
+The frontend is implemented as a multi-step Angular form.
+
+The backend uses ASP.NET Core Minimal APIs, with endpoint mappings located in `Program.cs`.
+
+The new report endpoint was added to `Program.cs` to remain consistent with the existing project structure.
 
 ---
 
 ## Design Decisions
 
-The existing application uses **ASP.NET Core Minimal APIs**, therefore the new endpoint was implemented in `Program.cs` to remain consistent with the existing project structure.
+### Minimal Changes to Existing Code
 
-The implementation intentionally avoids unnecessary architectural changes and introduces only the functionality required by the assignment.
+The assignment requires extending an existing project rather than creating a new application.
 
-Where possible, existing services, validation mechanisms and project conventions were reused.
+For this reason:
+
+* Existing services and routing were reused.
+* Existing form-state handling was preserved.
+* The project was not migrated to another architecture.
+* No additional state-management library was introduced.
+* No unnecessary repository or service layer was created for mock report data.
+
+If the reporting functionality were expanded or connected to a database, its logic would be moved into dedicated application and data-access services.
+
+### Reactive Forms
+
+The new form step uses the existing Angular Reactive Forms approach.
+
+Validation is defined in the `FormGroup`, rather than relying only on HTML attributes. The `maxlength` attribute is also used in the template to prevent the user from entering more than 7,000 characters.
+
+### Mock Data
+
+The assignment explicitly allows mock data for the monthly-report endpoint.
+
+Therefore, no database setup or migration was added solely for the report.
 
 ---
 
-## Assumptions
+## Security
 
-The assignment explicitly allows using mock data for the reporting endpoint.
+The existing project contains several security-related mechanisms.
 
-Therefore:
+### Captcha Validation
 
-- No database was added.
-- No repository or service layer was introduced for the report.
-- The endpoint returns representative sample data.
+A captcha is generated by:
+
+```text
+GET /captcha
+```
+
+The captcha value is stored temporarily in memory using a generated session identifier.
+
+During form submission, the backend validates:
+
+* `captchaSessionId`
+* `captchaCode`
+
+The submitted form is rejected when the captcha is missing or invalid.
+
+### File Extension Validation
+
+Uploaded files are checked against an allow-list of permitted extensions.
+
+Examples include:
+
+* PDF
+* Word documents
+* Image files
+* Audio and video files
+
+Files with unsupported extensions are rejected.
+
+In a production system, additional validation should include:
+
+* Maximum file size
+* Content-type validation
+* File-signature validation
+* Antivirus or malware scanning
+* Safe generated file names
+* Storage outside the publicly served application folder
+
+### Security Headers
+
+The backend adds the following response headers:
+
+```text
+Referrer-Policy: same-origin
+X-Frame-Options: DENY
+Content-Security-Policy: frame-ancestors 'none'
+```
+
+These headers reduce the risk of exposing referrer data and help protect the application against clickjacking.
+
+### Antiforgery
+
+ASP.NET Core antiforgery services are configured in the project.
+
+Some Minimal API endpoints currently disable antiforgery explicitly because of the existing client-server implementation.
+
+In a production environment, I would review the authentication mechanism, cookie usage and request flow before deciding whether antiforgery protection should remain disabled.
+
+### Authentication and Authorization
+
+Authentication and authorization are not implemented in the supplied project and were not required as part of this assignment.
+
+In a production system, protected administrative or reporting endpoints should require authentication and role- or policy-based authorization.
+
+### Sensitive Data
+
+Captcha values are excluded from the returned form-data object.
+
+Detailed internal exception information should be logged on the server and should not be exposed directly to the client.
 
 ---
 
-## Running the Project
+## Error Handling
 
-### Backend
+The backend contains centralized exception handling through ASP.NET Core exception-handling middleware.
 
-```bash
-dotnet run
+Unexpected exceptions are logged and returned as JSON together with a request identifier.
+
+The request identifier can be used to correlate a client-side error with the corresponding server log.
+
+The application also returns validation errors for cases such as:
+
+* Missing captcha data
+* Invalid captcha
+* Unsupported file extension
+* Invalid request data
+
+In a production system, I would use a consistent error-response contract, for example:
+
+```json
+{
+  "message": "A validation error occurred.",
+  "errors": {
+    "fieldName": [
+      "Error description"
+    ]
+  },
+  "requestId": "..."
+}
 ```
 
-### Frontend
+Unexpected exceptions should return an appropriate HTTP status code such as `500 Internal Server Error`, while invalid client input should return a `400 Bad Request`.
 
-```bash
-npm install
-npm start
-```
+Internal exception messages, stack traces and infrastructure details should not be exposed to the client.
 
-For local development, make sure `config.json` contains:
+---
+
+## Client–Server Communication
+
+The Angular frontend communicates with the ASP.NET Core backend using `HttpClient`.
+
+Backend URLs are loaded through the existing configuration service and environment-based `config.json` values.
+
+For local development:
 
 ```json
 {
@@ -127,40 +296,200 @@ For local development, make sure `config.json` contains:
 }
 ```
 
+Example request flow:
+
+```text
+Angular component
+    ↓
+Angular service
+    ↓
+HttpClient
+    ↓
+ASP.NET Core Minimal API endpoint
+    ↓
+JSON response
+```
+
+Form submission uses `multipart/form-data` because it contains both form values and optional files.
+
+The monthly report uses a regular `GET` request and returns JSON.
+
+---
+
+## Cross-Domain Communication and CORS
+
+During local development, the frontend and backend run on different origins:
+
+```text
+Frontend: http://localhost:4200
+Backend:  http://localhost:5209
+```
+
+Because the scheme, host or port differs, the browser treats these as separate origins.
+
+A CORS policy named `AngularClient` is configured in the backend:
+
+```csharp
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularClient", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+```
+
+The policy is enabled using:
+
+```csharp
+app.UseCors("AngularClient");
+```
+
+Only the known Angular development origin is allowed.
+
+`AllowAnyOrigin()` is intentionally not used because a production system should permit requests only from trusted frontend origins.
+
+Production origins should be stored in environment-specific configuration rather than hard-coded.
+
+---
+
+## Running the Project
+
+### Backend
+
+Navigate to:
+
+```text
+PublicComplaintForm_API
+```
+
+Then run:
+
+```bash
+dotnet restore
+dotnet build
+dotnet run
+```
+
+The backend local URL used by the frontend is:
+
+```text
+http://localhost:5209
+```
+
+The actual URL may vary according to the active launch profile.
+
+Useful endpoints:
+
+```text
+GET  /captcha
+GET  /courts
+GET  /monthly-report
+POST /submit-form
+```
+
+---
+
+### Frontend
+
+Navigate to:
+
+```text
+PublicComplaintForm
+```
+
+Then run:
+
+```bash
+npm install
+npm start
+```
+
+The Angular application normally runs at:
+
+```text
+http://localhost:4200
+```
+
+Ensure that `public/config.json` contains the correct local backend URL.
+
+---
+
+## Verification
+
+The implementation was manually verified with the following scenarios:
+
+* Opening the Contact Details step
+* Required validation for complaint description
+* Limiting complaint description to 7,000 characters
+* Updating the remaining-character counter
+* Numeric validation for court case number
+* Selecting a court
+* Navigating forward and backward between wizard steps
+* Preserving values between wizard steps
+* Loading captcha data from the backend
+* Submitting the complete form
+* Receiving the submitted data in the backend response
+* Calling `GET /monthly-report`
+* Receiving a valid JSON report response
+
 ---
 
 ## Technologies
 
 ### Frontend
 
-- Angular
-- TypeScript
-- Reactive Forms
-- Angular Material
+* Angular
+* TypeScript
+* Reactive Forms
+* Angular Material
+* HTML5
+* SCSS
+* RxJS
+* Angular `HttpClient`
 
 ### Backend
 
-- ASP.NET Core (.NET 8)
-- C#
-- Minimal APIs
+* ASP.NET Core
+* .NET 8
+* C#
+* Minimal APIs
+* In-memory caching
+* Log4net
 
 ### Database
 
-- SQL Server (SQL solution)
+* SQL Server SQL solution
 
 ---
 
 ## Future Improvements
 
-If this project were extended into a production system, I would consider:
+For a production implementation, I would consider:
 
-- Persisting complaint data in SQL Server.
-- Moving report generation into a dedicated service layer.
-- Adding automated unit and integration tests.
-- Adding structured logging and monitoring.
-- Implementing authentication and authorization.
-- Adding pagination and filtering for reporting endpoints.
+* Persisting complaints in SQL Server
+* Executing the monthly-report query through a dedicated data-access layer
+* Adding strongly typed request and response DTOs
+* Adding automated unit and integration tests
+* Adding OpenAPI/Swagger documentation
+* Adding authentication and authorization
+* Improving the centralized error-response contract
+* Adding request validation on the server
+* Adding file-size and content validation
+* Adding malware scanning for uploaded files
+* Moving allowed origins to environment configuration
+* Adding structured logging, health checks and monitoring
+* Adding pagination and filters if the report grows
 
 ---
 
-Thank you for reviewing my solution.
+## Notes
+
+The existing `/courts` endpoint returns an empty list in the provided local project configuration.
+
+To keep the new form step functional without expanding the assignment scope, the existing local fallback list is preserved.
+
+In a production implementation, the list of courts should be supplied by the backend or database.
